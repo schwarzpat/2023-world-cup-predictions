@@ -12,7 +12,7 @@
 
 The pairwise winning probabilities between teams are represented in the following heatmap:
 
-![Pairwise Comparisons Heatmap](<link_to_the_heatmap_image>)
+![Pairwise Comparisons Heatmap](<https://github.com/schwarzpat/2023-world-cup-predictions/blob/main/figures/Figure_1.png>)
 
 # Tournament Simulation
 
@@ -48,6 +48,4 @@ The tournament simulation is run multiple times to generate a distribution of po
 
 The results of the simulation are a list of the winners of each simulated tournament. The distribution of winners can be visualized with a bar plot, with the x-axis representing the number of wins and the y-axis representing the teams.
 
-## Disclaimer
-
-These results are based on a simulation and the consensus scores from the data provided. They do not guarantee or predict actual results.
+![Simulated tournament wins](<lhttps://github.com/schwarzpat/2023-world-cup-predictions/blob/main/figures/Figure_1.png>)
