@@ -26,7 +26,9 @@ The Bradley-Terry model is a probabilistic model that is often used to predict t
 
 The model uses a logistic function to calculate this probability:
 
-\[ p = rac{1}{1 + e^{-(	ext{{consensus}}_A - 	ext{{consensus}}_B)}} \]
+```math
+p = rac{1}{1 + e^{-(	ext{{consensus}}_A - 	ext{{consensus}}_B)}}
+```
 
 This function returns a value between 0 and 1, representing the probability of Team A beating Team B. To make the favorites more likely to win, the consensus scores are multiplied by a factor greater than 1 before using them in the logistic function.
 
