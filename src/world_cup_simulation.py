@@ -86,15 +86,6 @@ win_counts_df['wins'] = win_counts_df['wins'] / n_simulations * 100
 plt.figure(figsize=(10,8))
 bars = plt.barh(win_counts_df['team'], win_counts_df['wins'], color='skyblue')
 
-# Label the bars with their percentage values
-for bar in bars:
-    width = bar.get_width()
-    plt.text(width + 1,  # x position
-             bar.get_y() + bar.get_height() / 2,  # y position
-             f'{width:.1f}%',  # text
-             ha='left',  # horizontal alignment
-             va='center')  # vertical alignment
-
 plt.xlabel('Win Percentage (%)')
 plt.title('Distribution of Winners')
 plt.gca().invert_yaxis()

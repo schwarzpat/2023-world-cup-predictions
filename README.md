@@ -48,4 +48,5 @@ The tournament simulation is run multiple times to generate a distribution of po
 
 The results of the simulation are a list of the winners of each simulated tournament. The distribution of winners can be visualized with a bar plot, with the x-axis representing the number of wins and the y-axis representing the teams.
 
-![Simulated tournament wins](<lhttps://github.com/schwarzpat/2023-world-cup-predictions/blob/main/figures/Figure_2.png?raw=true>)
+
+![Simulated tournament wins](<lhttps://github.com/schwarzpat/2023-world-cup-predictions/blob/main/figures/Figure_2.png>)
