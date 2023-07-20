@@ -83,6 +83,7 @@ win_counts_df = win_counts_df.sort_values(by='wins', ascending=False)
 win_counts_df['wins'] = win_counts_df['wins'] / n_simulations * 100
 
 # Plot distribution of winners
+plt.style.use('dark_background')
 plt.figure(figsize=(10,8))
 bars = plt.barh(win_counts_df['team'], win_counts_df['wins'], color='skyblue')
 
