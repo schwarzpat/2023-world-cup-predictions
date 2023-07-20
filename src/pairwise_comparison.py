@@ -1,14 +1,22 @@
 import pandas as pd
-import plotly.graph_objects as go
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Load the dataset
 df = pd.read_csv('2023-world-cup-predictions/data/wwc2023.csv')
+df.head()
 
-# Normalize the "win" column to represent abilities
+# Let's normalize the "win" column to represent abilities
 df["ability"] = df["win"] / df["win"].sum()
 
-# Get the unique teams
+# Displaying the abilities
+team_abilities = df[["team", "ability"]].sort_values(by="ability", ascending=False)
+team_abilities
+
+# Checking the unique values in the "team" column
 teams = df["team"].unique()
+teams
 
 # Initialize a dataframe to store the probabilities
 pairwise_probs = pd.DataFrame(index=teams, columns=teams)
@@ -24,36 +32,11 @@ for team_a in teams:
 
 # Replace NaN (resulting from a team playing against itself) with 0.5
 pairwise_probs = pairwise_probs.fillna(0.5)
-
-# Convert probabilities to numeric
 pairwise_probs = pairwise_probs.apply(pd.to_numeric)
 
-# Create a heatmap figure
-fig = go.Figure(data=go.Heatmap(
-    z=pairwise_probs.values,
-    x=teams,
-    y=teams,
-    colorscale='Viridis'
-))
-
-# Customize the layout
-fig.update_layout(
-    title='Pairwise Comparisons',
-    xaxis=dict(title='Team B'),
-    yaxis=dict(title='Team A'),
-)
-
-# Add annotations to the heatmap
-for i, team_a in enumerate(teams):
-    for j, team_b in enumerate(teams):
-        if team_a != team_b:
-            fig.add_annotation(
-                x=team_b,
-                y=team_a,
-                text=f'{pairwise_probs.loc[team_a, team_b]:.2f}',
-                showarrow=False,
-                font=dict(color='white' if i != j else 'black')
-            )
-
-# Display the interactive plot
-fig.show()
+# Plotting the heatmap
+plt.style.use('dark_background')
+plt.figure(figsize=(20, 15))
+sns.heatmap(pairwise_probs, cmap="RdYlBu_r", annot=False, cbar=True, linewidths=.5)
+plt.title('Pairwise Probabilities of Teams Winning')
+plt.show()
