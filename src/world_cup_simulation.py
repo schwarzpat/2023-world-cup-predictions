@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from scipy.stats import logistic
@@ -44,43 +43,74 @@ def simulate_group(group):
                 standings.loc[j, "points"] += 1
     return standings.sort_values(["points", "goal_difference"], ascending=[False, False])
 
+def simulate_knockout_stage(match_setup, teams):
+    winners = []
+    for match in match_setup:
+        team1 = teams.loc[teams["team"] == match[0]]
+        team2 = teams.loc[teams["team"] == match[1]]
+        outcome, _ = simulate_match(team1, team2)
+        if outcome >= 0.5:
+            winners.append(match[0])
+        else:
+            winners.append(match[1])
+    return winners
+
 def simulate_tournament(teams):
     group_winners = []
+    group_runners_up = []
     for group_name, group in teams.groupby("group"):
         standings = simulate_group(group)
         group_winners.append(standings.iloc[0]["team"])
-        group_winners.append(standings.iloc[1]["team"])
+        group_runners_up.append(standings.iloc[1]["team"])
 
-    np.random.shuffle(group_winners)
-    while len(group_winners) > 1:
-        team1 = teams.loc[teams["team"] == group_winners[0]]
-        team2 = teams.loc[teams["team"] == group_winners[1]]
-        outcome, _ = simulate_match(team1, team2)
-        if outcome >= 0.5:
-            del group_winners[1]
-        else:
-            del group_winners[0]
-    return group_winners[0]
+    round_of_16 = [
+        [group_winners[0], group_runners_up[2]],  # 1st Group A vs 2nd Group C
+        [group_winners[2], group_runners_up[0]],  # 1st Group C vs 2nd Group A
+        [group_winners[4], group_runners_up[6]],  # 1st Group E vs 2nd Group G
+        [group_winners[6], group_runners_up[4]],  # 1st Group G vs 2nd Group E
+        [group_winners[1], group_runners_up[3]],  # 1st Group B vs 2nd Group D
+        [group_winners[3], group_runners_up[1]],  # 1st Group D vs 2nd Group B
+        [group_winners[5], group_runners_up[7]],  # 1st Group F vs 2nd Group H
+        [group_winners[7], group_runners_up[5]]   # 1st Group H vs 2nd Group F
+    ]
 
-# Read the data
+    winners_round_of_16 = simulate_knockout_stage(round_of_16, teams)
+
+    quarterfinals = [
+        [winners_round_of_16[0], winners_round_of_16[2]],
+        [winners_round_of_16[1], winners_round_of_16[3]],
+        [winners_round_of_16[4], winners_round_of_16[6]],
+        [winners_round_of_16[5], winners_round_of_16[7]]
+    ]
+
+    winners_quarterfinals = simulate_knockout_stage(quarterfinals, teams)
+
+    semifinals = [
+        [winners_quarterfinals[0], winners_quarterfinals[1]],
+        [winners_quarterfinals[2], winners_quarterfinals[3]]
+    ]
+
+    winners_semifinals = simulate_knockout_stage(semifinals, teams)
+
+    finals = [winners_semifinals[0], winners_semifinals[1]]
+
+    winner_final = simulate_knockout_stage([finals], teams)[0]
+
+    return winner_final
+
 teams = pd.read_csv('2023-world-cup-predictions/data/wwc2023.csv')
 
-# Number of simulations
+
 n_simulations = 10000
 
-# Simulate tournament
+
 results = [simulate_tournament(teams) for _ in range(n_simulations)]
-
-# Count the number of times each team won
 win_counts = Counter(results)
-
-# Convert to a DataFrame for easier viewing
 win_counts_df = pd.DataFrame.from_dict(win_counts, orient='index', columns=['wins']).reset_index()
 win_counts_df.rename(columns={'index': 'team'}, inplace=True)
 win_counts_df = win_counts_df.sort_values(by='wins', ascending=False)
-
-# Convert wins to percentages
 win_counts_df['wins'] = win_counts_df['wins'] / n_simulations * 100
+
 
 # Plot distribution of winners
 plt.style.use('dark_background')
