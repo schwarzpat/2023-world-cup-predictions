@@ -42,7 +42,7 @@ The tournament is simulated by first simulating all the matches in each group an
 
 In the knockout stage, pairs of teams play against each other, and the winner advances to the next round. This continues until only one team is left, which is considered the winner of the tournament.
 
-The tournament simulation is run multiple times to generate a distribution of possible outcomes. 
+The tournament simulation is run 10000  to generate a distribution of possible outcomes. 
 
 ## Results
 
